@@ -1,3 +1,3 @@
 app.controller('MainCtrl',$scope=>{
-    $scope.hello="hello angularjs";
+    $scope.hello="Online Organizer";
 });

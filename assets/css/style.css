@@ -1,0 +1,134 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: "Miriam Libre", sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  color: #777;
+  background-color: #f5f6fa;
+}
+
+.main-holder {
+  background-color: #fff;
+  /*box-shadow: 0 1px 1px rgba(0, 0, 0, .05);*/
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  margin-top: 10px;
+  /* padding: 20px 20px; */
+}
+
+.app-title {
+  color: #777;
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.calandar-container {
+  background-color: bisque;
+  border: #777 1px solid;
+  border-radius: 5px;
+  min-height: 230px;
+}
+
+.events-container {
+  padding: 35px 30px;
+  background-color: #f5f6fa;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.event-container {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 2px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.events-container__header {
+  margin-bottom: 30px;
+}
+
+.date {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-left: #17a2b8 solid 10px;
+  text-align: center;
+}
+
+.my-auto {
+  padding: 3% 0;
+}
+
+.form-container {
+  padding: 25px 30px;
+  background-color: #f5f6fa;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+.del-btn button {
+  display: block;
+  color: rgb(255, 255, 255);
+  background: rgb(230, 87, 87);
+  margin: 5px;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 50%;
+  
+}
+
+.del-btn button:hover {
+  text-decoration: none;
+  color: rgb(230, 87, 87);
+  background: rgb(255, 255, 255);
+  border: 1px solid rgb(230, 87, 87);
+}
+
+.edit-btn button {
+    display: block;
+    color: rgb(255, 255, 255);
+    background: #2ecc71;
+    margin: 5px;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    
+  }
+  
+  .edit-btn button:hover {
+    text-decoration: none;
+    color:#2ecc71;
+    background: #ffffff;
+    border: 1px solid #2ecc71;
+  }
+
+button {
+  font-size: 100%;
+  font-family: inherit;
+  border: 0;
+  padding: 0;
+  overflow: visible; /* Edge hides overflow */
+  text-transform: none; /* Firefox inherits text-transform */
+  -webkit-appearance: button; /* Safari otherwise prevents some styles */
+}
