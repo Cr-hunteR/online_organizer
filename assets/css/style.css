@@ -132,3 +132,8 @@ button {
   text-transform: none; /* Firefox inherits text-transform */
   -webkit-appearance: button; /* Safari otherwise prevents some styles */
 }
+
+.alert-heading{
+  font-weight: 600;
+  font-size: 2rem;
+}

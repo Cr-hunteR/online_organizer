@@ -1,1 +1,1 @@
-let app=angular.module('online_organizer',[]);
+let app=angular.module('online_organizer',[ 'ui.bootstrap','ngMaterial',]);

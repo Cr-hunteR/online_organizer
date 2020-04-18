@@ -23,58 +23,68 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+    <!--Bootstrap 3 icon library-->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/v1.1.22-rc.0/angular-material.css" />
+    <link rel="stylesheet" href="https://material.angularjs.org/1.1.22-rc.0/docs.css" />
     <link rel="stylesheet" href="./assets/css/style.css" />
 
     <title>Online Organizer</title>
   </head>
-  <body ng-controller="MainCtrl">
+  <body data-ng-controller="MainCtrl">
     <div class="container main-holder">
       <div class="row">
         <!-- First Row -->
         <div class="col-12">
-          <h1 class="app-title">{{hello}}</h1>
+          <h1 class="app-title">ONLINE ORGANIZER</h1>
         </div>
       </div>
       <div class="row">
         <!-- Second Row -->
         <div class="col-6">
           <div class="calandar-container">
-            calandar
+            <p ng-bind="myDate"></p>
+            <p ng-model="myDate"></p>
           </div>
+          <h4>Standard date-picker</h4>
+          <md-datepicker ng-model="myDate" ng-change="changedDate()" md-placeholder="Enter date"></md-datepicker>
+          <!--time picker-->
+          <div uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+
+          <pre class="alert alert-info">Time is: {{mytime | date:'shortTime' }}</pre>
+          <!--time picker end-->
         </div>
         <div class="col-6">
           <div class="card text-white bg-info mb-3">
             <!-- Comming up event -->
-            <div class="card-header">Time : 00:56:45</div>
+            <div class="card-header">Time : {{remDays}}:{{remHours}}:{{remMins}}:{{remSecs}}</div>
             <div class="card-body">
-              <h5 class="card-title">Event one</h5>
+              <h5 class="card-title">{{comingUpEventName}}</h5>
               <p class="card-text">This is the first event on your list!</p>
             </div>
           </div>
         </div>
       </div>
-      <div class="row px-3 my-5">
+      <div ng-if="showCreatingForm()" class="row px-3 my-5">
         <!-- Hidden Row - Form -->
         <div class="col-12 form-container">
           <h2>Create a Event!</h2>
-          <form>
+          <form ng-submit="createEvent(newEvent)">
             <div class="row">
               <div class="col-md-5 mb-1">
                 <input
                   type="text"
-                  class="form-control"
-                  placeholder="First name"
+                  class="form-control mt-5"
+                  placeholder="Event Name"
+                  ng-model="newEvent.title"
                 />
               </div>
               <div class="col-md-5 mb-1">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Last name"
-                />
+                <div uib-timepicker ng-model="newEvent.time" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
               </div>
               <div class="col-md-2 mb-1">
-                <button type="button" class="btn btn-primary btn-block">
+                <button type="submit" class="btn btn-primary btn-block">
                   Create
                 </button>
               </div>
@@ -87,23 +97,24 @@
         <div class="col-12 events-container">
           <div class="row events-container__header justify-content-between">
             <div class="col-md-4 date p-0 mb-2">
-              <p class="my-auto">17-04-2020</p>
+              <p class="my-auto">{{formattedDate}}</p>
             </div>
             <div class="col-md-4 mb-2">
               <div class="row">
-                <button type="button" class="btn btn-primary btn-lg btn-block">
+                <button ng-click="startCreating();" type="button" class="btn btn-primary btn-lg btn-block">
                   Create a Event Now!!
                 </button>
               </div>
             </div>
           </div>
           <!-- Event -->
-          <div class="row align-items-center event-container">
+          <div data-ng-repeat="oEvent in events | filter:{date:formattedDate}" class="row align-items-center event-container">
+
             <div class="col-lg-5 col-md-5 col-sm-5 col-5 todo-title justify-content-center">
-              Event 2
+              {{oEvent.title}}
             </div>
             <div class="col-lg-5 col-md-5 col-sm-5 col-5 todo-title justify-content-center">
-              01:56:23
+              {{oEvent.time}}
             </div>
             <div class="col-lg-1 col-md-2 col-sm-2 col-2 edit-btn">
               <button>
@@ -117,51 +128,17 @@
               </button>
             </div>
           </div>
-          <!-- Event-end -->
-
-          <!-- Event -->
-          <div class="row align-items-center event-container">
-            <div class="col-lg-5 col-md-5 col-sm-5 col-5 todo-title justify-content-center">
-              Event 2
-            </div>
-            <div class="col-lg-5 col-md-5 col-sm-5 col-5 todo-title justify-content-center">
-              01:56:23
-            </div>
-            <div class="col-lg-1 col-md-2 col-sm-2 col-2 edit-btn">
-              <button>
-                <i class="far fa-trash-alt"></i>
-              </button>
-            </div>
-
-            <div class="col-lg-1 col-md-2 col-sm-2 col-2 del-btn">
-              <button>
-                <i class="far fa-trash-alt"></i>
-              </button>
-            </div>
+          <div ng-if="(events|filter:{date:formattedDate}).length == 0"  class="alert alert-success" role="alert">
+            <h4 class="alert-heading">No Events!!</h4>
+            <p>No Events assigned to the {{formattedDate}}</p>
+            <hr>
+            <h4 class="alert-heading">Let's Create a one</h4>
           </div>
+
+
           <!-- Event-end -->
 
-          <!-- Event -->
-          <div class="row align-items-center event-container">
-            <div class="col-lg-5 col-md-5 col-sm-5 col-5 todo-title justify-content-center">
-              Event 2
-            </div>
-            <div class="col-lg-5 col-md-5 col-sm-5 col-5 todo-title justify-content-center">
-              01:56:23
-            </div>
-            <div class="col-lg-1 col-md-2 col-sm-2 col-2 edit-btn">
-              <button>
-                <i class="far fa-trash-alt"></i>
-              </button>
-            </div>
 
-            <div class="col-lg-1 col-md-2 col-sm-2 col-2 del-btn">
-              <button>
-                <i class="far fa-trash-alt"></i>
-              </button>
-            </div>
-          </div>
-          <!-- Event-end -->
 
         </div>
       </div>
@@ -184,7 +161,19 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.6/angular-messages.min.js"></script>
+
+    <!-- Angular Material Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.12/angular-material.min.js"></script>
+    <!--Time picker from bootstrap angular library-->
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
+    <!--Moment js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+
     <script src="./app/app.js"></script>
     <script src="./app/controllers/mainController.js"></script>
   </body>
