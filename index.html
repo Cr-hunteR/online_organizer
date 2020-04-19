@@ -35,44 +35,58 @@
   <body data-ng-controller="MainCtrl">
     <div class="container main-holder">
       <div class="row">
-        <!-- First Row -->
+        <!-- First Row Title-->
         <div class="col-12">
           <h1 class="app-title">ONLINE ORGANIZER</h1>
         </div>
       </div>
       <div class="row">
-        <!-- Second Row -->
-        <div class="col-6">
-          <div class="calandar-container">
-            <p ng-bind="myDate"></p>
-            <p ng-model="myDate"></p>
-          </div>
-          <h4>Standard date-picker</h4>
-          <md-datepicker ng-model="myDate" ng-change="changedDate()" md-placeholder="Enter date"></md-datepicker>
-          <!--time picker-->
-          <div uib-timepicker ng-model="mytime" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+        <!-- Second Row Calendar and the Coming Up!! -->
+        <div class="col-md-6 calandar-wrapper">
 
-          <pre class="alert alert-info">Time is: {{mytime | date:'shortTime' }}</pre>
-          <!--time picker end-->
+
+
+          <div class="calandar-container">
+
+            <md-calendar class="calandar" ng-model="myDate" ng-change="changedDate()" md-placeholder="Enter date"></md-calendar>
+          </div>
+
+
         </div>
-        <div class="col-6">
-          <div class="card text-white bg-info mb-3">
+        <div ng-if="(filteredEvents.length)!=0" class="col-lg-5 col-md-6 ">
+          <div class="card text-white bg-secondary mb-3">
             <!-- Comming up event -->
-            <div class="card-header">Time : {{remDays}}:{{remHours}}:{{remMins}}:{{remSecs}}</div>
+            <div class="card-header"> {{remDays}} {{remDays>1 ? 'days' : 'day'}} & {{remHours}}:{{remMins}}:{{remSecs}} left</div>
             <div class="card-body">
-              <h5 class="card-title">{{comingUpEventName}}</h5>
-              <p class="card-text">This is the first event on your list!</p>
+              <p class="card-text-title mb-0">{{comingUpEventName}}</p>
+              <h6 class="card-text-date mb-3">Date:{{comingUpEventDate}}</h6>
+
+              <h5 class="card-title mt-3">This is the first event on your Que!!</h5>
+            </div>
+          </div>
+        </div>
+        <div ng-if="(filteredEvents.length)==0" class="col-lg-5 col-md-6 ">
+          <div class="card text-white bg-secondary mb-3">
+            <!-- Comming up event -->
+            <div class="card-header"> Oops!! No events</div>
+            <div class="card-body">
+              <p class="card-text-title mb-0">Lets create a one</p>
+              <h6 class="card-text-date mb-3">Be productive!</h6>
+              <h5 class="card-title mt-3">No any active events on your Que!!</h5>
             </div>
           </div>
         </div>
       </div>
+        <!-- Hidden Row -Create Form -->
       <div ng-if="showCreatingForm()" class="row px-3 my-5">
-        <!-- Hidden Row - Form -->
         <div class="col-12 form-container">
+          <a href="#" ng-click="cancelCreateForm();" class="close" >
+            <i class="fas fa-times"></i>
+          </a>
           <h2>Create a Event!</h2>
           <form ng-submit="createEvent(newEvent)">
             <div class="row">
-              <div class="col-md-5 mb-1">
+              <div class="col-md-5 ">
                 <input
                   type="text"
                   class="form-control mt-5"
@@ -80,11 +94,11 @@
                   ng-model="newEvent.title"
                 />
               </div>
-              <div class="col-md-5 mb-1">
+              <div class="col-md-3 ">
                 <div uib-timepicker ng-model="newEvent.time" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
               </div>
-              <div class="col-md-2 mb-1">
-                <button type="submit" class="btn btn-primary btn-block">
+              <div class="col-md-4 ">
+                <button type="submit" class="btn btn-secondary btn-block mt-5">
                   Create
                 </button>
               </div>
@@ -92,6 +106,39 @@
           </form>
         </div>
       </div>
+      <!-- Hidden Row -Create Form End-->
+      <!--Hidden Edit Form -->
+      <div ng-if="showEditForm(editEvent)" class="row px-3 my-5">
+        <div class="col-12 form-container">
+          <a href="#" ng-click="cancelEditForm();" class="close" >
+            <i class="fas fa-times"></i>
+          </a>
+          <h2>Edit the Event!</h2>
+          <form ng-submit="editEvent(oldEvent)">
+            <div class="row">
+              <div class="col-md-5 ">
+                <input
+                        type="text"
+                        class="form-control mt-5"
+                        placeholder="Event Name"
+                        ng-model="oldEvent.title"
+                />
+              </div>
+              <div class="col-md-3 ">
+                <div uib-timepicker ng-model="oldEvent.fullDate" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>
+              </div>
+              <div class="col-md-4 ">
+                <button type="submit" class="btn btn-secondary btn-block mt-5">
+                  Edit
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+      <!--Hidden Edit Form End -->
       <div class="row px-3 my-5">
         <!-- Third Row -->
         <div class="col-12 events-container">
@@ -101,42 +148,61 @@
             </div>
             <div class="col-md-4 mb-2">
               <div class="row">
-                <button ng-click="startCreating();" type="button" class="btn btn-primary btn-lg btn-block">
+                <button ng-click="startCreating();" type="button" class="btn btn-outline-secondary custom-btn btn-lg btn-block">
                   Create a Event Now!!
                 </button>
               </div>
             </div>
           </div>
-          <!-- Event -->
-          <div data-ng-repeat="oEvent in events | filter:{date:formattedDate}" class="row align-items-center event-container">
 
-            <div class="col-lg-5 col-md-5 col-sm-5 col-5 todo-title justify-content-center">
+          <!-- Event -->
+          <div data-ng-repeat="oEvent in filteredEvents | filter:{date:formattedDate}" class="row align-items-center event-container">
+
+            <div class="col-lg-5 col-md-5 col-sm-6 col-5  ">
               {{oEvent.title}}
             </div>
-            <div class="col-lg-5 col-md-5 col-sm-5 col-5 todo-title justify-content-center">
+            <div class="col-lg-5 col-md-3 col-sm-2 col-3  ">
               {{oEvent.time}}
             </div>
             <div class="col-lg-1 col-md-2 col-sm-2 col-2 edit-btn">
-              <button>
-                <i class="far fa-trash-alt"></i>
+              <button ng-click="startEditing(); realTimePlaceHolders(oEvent);">
+                <i class="fas fa-pencil-alt"></i>
               </button>
             </div>
 
             <div class="col-lg-1 col-md-2 col-sm-2 col-2 del-btn">
-              <button>
+              <button ng-click="deleteEvent(oEvent);">
                 <i class="far fa-trash-alt"></i>
               </button>
             </div>
           </div>
+          <!-- Event-end -->
+          <!--Expired Event -->
+          <div data-ng-repeat="expEvent in expiredEvents | filter:{date:formattedDate}" class="row align-items-center event-container">
+
+            <div class="col-lg-5 col-md-5 col-sm-5 col-5  justify-content-center">
+              <strike>{{expEvent.title}}</strike>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-5 col-5  justify-content-center">
+              <strike>{{expEvent.time}}</strike>
+            </div>
+
+
+            <div class="col-lg-1 col-md-2 col-sm-2 col-2 del-btn">
+              <button ng-click="deleteEvent(expEvent);">
+                <i class="far fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+          <!--Expired Event-end -->
+          <!--If there are no events Error Msg-->
           <div ng-if="(events|filter:{date:formattedDate}).length == 0"  class="alert alert-success" role="alert">
             <h4 class="alert-heading">No Events!!</h4>
-            <p>No Events assigned to the {{formattedDate}}</p>
+            <p>No Active Events assigned to the {{formattedDate}}</p>
             <hr>
             <h4 class="alert-heading">Let's Create a one</h4>
           </div>
-
-
-          <!-- Event-end -->
+          <!-- Error Msg End -->
 
 
 
@@ -144,8 +210,8 @@
       </div>
     </div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!--Libraries-->
+
     <script
       src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
       integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -173,6 +239,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
     <!--Moment js-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <!--Underscore functions-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
 
     <script src="./app/app.js"></script>
     <script src="./app/controllers/mainController.js"></script>
